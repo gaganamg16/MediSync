@@ -1,0 +1,73 @@
+﻿/* MediSync dashboard visual improvements */
+body {
+    background: #f1f5f9 !important;
+    color: #172b4d;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+.dashboard-section {
+    margin: 24px 0 !important;
+    padding: 24px !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.06) !important;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    color: #0f766e;
+    font-size: 21px;
+    font-weight: 700;
+}
+
+.card {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 15px !important;
+    padding: 20px !important;
+    margin: 12px 0 !important;
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04) !important;
+}
+
+.card h3 {
+    color: #0f766e;
+}
+
+button, .btn, input[type="submit"] {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover, .btn:hover, input[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(15, 118, 110, 0.16);
+}
+
+a {
+    transition: color 0.2s ease;
+}
+
+input, select, textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .dashboard-section {
+        padding: 16px !important;
+        margin: 16px 0 !important;
+    }
+
+    .card {
+        padding: 15px !important;
+    }
+}

@@ -1,81 +1,234 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}MediSync{% endblock %}</title>
+    <title>{% block title %}MediSync | Healthcare Management{% endblock %}</title>
 
     <style>
+        :root {
+            --primary: #087f8c;
+            --primary-dark: #066570;
+            --primary-light: #e6f7f7;
+            --background: #f5f8fc;
+            --surface: #ffffff;
+            --text: #172b4d;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #dc2626;
+        }
+
         * {
             box-sizing: border-box;
         }
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #1e293b;
+        html {
+            scroll-behavior: smooth;
         }
 
+        body {
+            margin: 0;
+            font-family: Inter, "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Navigation */
         .navbar {
-            background: #2563eb;
-            color: white;
-            padding: 16px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            width: 100%;
+            min-height: 76px;
+            padding: 14px 5%;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 24px;
+            box-shadow: 0 3px 15px rgba(15, 23, 42, 0.04);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 27px;
+            font-weight: 800;
         }
 
         .logo h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 25px;
+            line-height: 1.2;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: var(--text);
+        }
+
+        .logo h1 span {
+            color: var(--primary);
+        }
+
+        .logo small {
+            display: block;
+            margin-top: 3px;
+            color: var(--muted);
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .nav-links {
             display: flex;
-            gap: 20px;
             align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 9px 12px;
+            border-radius: 9px;
+            color: #475569;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
         }
 
         .nav-links a:hover {
-            text-decoration: underline;
+            color: var(--primary);
+            background: var(--primary-light);
         }
 
+        .nav-links .ai-link {
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .nav-links .logout-link:hover {
+            color: var(--danger);
+            background: #fef2f2;
+        }
+
+        /* Main content */
         .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+            width: 100%;
+            max-width: 1320px;
+            min-height: calc(100vh - 160px);
+            margin: 0 auto;
+            padding: 34px 28px 50px;
         }
 
-        @media (max-width: 700px) {
+        /* Common elements for child pages */
+        h1, h2, h3, h4 {
+            color: var(--text);
+            line-height: 1.3;
+        }
+
+        button, input, select, textarea {
+            font: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        input, select, textarea {
+            max-width: 100%;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 22px 20px;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .footer strong {
+            color: var(--primary);
+        }
+
+        /* Tablet and mobile */
+        @media (max-width: 1000px) {
             .navbar {
-                padding: 15px 20px;
+                padding: 14px 24px;
+                align-items: flex-start;
                 flex-direction: column;
-                gap: 12px;
+                gap: 14px;
             }
 
             .nav-links {
-                flex-wrap: wrap;
-                justify-content: center;
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 14px 16px;
+            }
+
+            .logo h1 {
+                font-size: 22px;
+            }
+
+            .nav-links {
+                gap: 4px;
+            }
+
+            .nav-links a {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 24px 15px 35px;
             }
         }
     </style>
+
+    <link rel="stylesheet" href="{% static 'medisync/css/app.css' %}">
+
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
 
 <nav class="navbar">
-
-    <div class="logo">
-        <h1>MediSync</h1>
-    </div>
+    <a class="logo" href="{% url 'dashboard' %}" aria-label="MediSync dashboard">
+        <div class="logo-icon">+</div>
+        <div>
+            <h1>Medi<span>Sync</span></h1>
+            <small>Healthcare made simpler</small>
+        </div>
+    </a>
 
     {% if user.is_authenticated %}
     <div class="nav-links">
@@ -83,18 +236,42 @@
         <a href="{% url 'medicine_list' %}">Medicines</a>
         <a href="{% url 'appointment_list' %}">Appointments</a>
         <a href="{% url 'record_list' %}">Records</a>
-        <a href="{% url 'logout' %}">Logout</a>
+        <a class="ai-link" href="{% url 'chatbot' %}">✦ AI Assistant</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a class="logout-link" href="{% url 'logout' %}">Logout</a>
+    </div>
+    {% else %}
+    <div class="nav-links">
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Create Account</a>
     </div>
     {% endif %}
-
 </nav>
 
-<div class="container">
+<main class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="site-message {{ message.tags }}" role="status">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
     {% block content %}
     {% endblock %}
+</main>
 
-</div>
+<footer class="footer">
+    <p>
+        <strong>MediSync</strong> &mdash;
+        Your healthcare management companion.
+    </p>
+    <p>For educational use. Always consult qualified healthcare professionals for medical advice.</p>
+</footer>
+
+<script src="{% static 'medisync/js/app.js' %}" defer></script>
+
+{% block extra_js %}{% endblock %}
 
 </body>
 </html>

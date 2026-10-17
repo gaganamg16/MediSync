@@ -1,0 +1,612 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediSync AI Assistant</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .app {
+            max-width: 1000px;
+            height: 92vh;
+            min-height: 550px;
+            margin: 4vh auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(15, 23, 42, 0.10);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #0f766e;
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.18);
+            display: grid;
+            place-items: center;
+            font-size: 25px;
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .status {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #ccfbf1;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            border: 1px solid rgba(255,255,255,0.4);
+            background: transparent;
+            color: white;
+            padding: 9px 12px;
+            border-radius: 9px;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .intro {
+            padding: 18px 24px;
+            background: #f0fdfa;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        .intro strong {
+            color: #115e59;
+        }
+
+        .intro p {
+            margin: 5px 0 0;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #475569;
+        }
+
+        .suggestions {
+            padding: 15px 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .suggestions-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+
+        .suggestion-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .suggestion {
+            background: white;
+            border: 1px solid #99f6e4;
+            color: #0f766e;
+            padding: 9px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .suggestion:hover {
+            background: #ccfbf1;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            scroll-behavior: smooth;
+        }
+
+        .message {
+            display: flex;
+            gap: 10px;
+            max-width: 85%;
+            animation: appear 0.25s ease;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .avatar {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 12px;
+            background: #ccfbf1;
+            color: #115e59;
+            font-weight: 700;
+        }
+
+        .user .avatar {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            min-width: 0;
+        }
+
+        .sender {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748b;
+        }
+
+        .user .sender,
+        .user .timestamp {
+            text-align: right;
+        }
+
+        .bubble {
+            padding: 13px 16px;
+            border-radius: 5px 16px 16px 16px;
+            background: #f1f5f9;
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .user .bubble {
+            background: #0f766e;
+            color: white;
+            border-radius: 16px 5px 16px 16px;
+        }
+
+        .timestamp {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        .typing {
+            display: none;
+            padding: 0 24px 12px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .typing.visible {
+            display: block;
+        }
+
+        .dots span {
+            animation: blink 1.2s infinite;
+            font-size: 20px;
+        }
+
+        .dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .composer {
+            border-top: 1px solid #e2e8f0;
+            padding: 17px 22px;
+            background: white;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #messageInput {
+            flex: 1;
+            min-width: 0;
+            padding: 15px 17px;
+            border: 1px solid #cbd5e1;
+            border-radius: 13px;
+            outline: none;
+            font: inherit;
+            font-size: 14px;
+        }
+
+        #messageInput:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 3px rgba(15,118,110,0.10);
+        }
+
+        #sendBtn {
+            border: none;
+            border-radius: 12px;
+            padding: 14px 21px;
+            background: #0f766e;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        #sendBtn:hover {
+            background: #115e59;
+        }
+
+        #sendBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 10px;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        @keyframes appear {
+            from {
+                opacity: 0;
+                transform: translateY(7px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+            0%, 60%, 100% { opacity: 0.25; }
+            30% { opacity: 1; }
+        }
+
+        @media (max-width: 650px) {
+            .app {
+                height: 100vh;
+                min-height: 0;
+                margin: 0;
+                border-radius: 0;
+            }
+
+            .header {
+                padding: 15px;
+            }
+
+            .brand h1 {
+                font-size: 17px;
+            }
+
+            .header-btn {
+                padding: 8px;
+                font-size: 11px;
+            }
+
+            .intro,
+            .suggestions {
+                padding: 13px 16px;
+            }
+
+            .messages {
+                padding: 17px 13px;
+            }
+
+            .message {
+                max-width: 95%;
+            }
+
+            .composer {
+                padding: 12px;
+            }
+
+            #sendBtn {
+                padding: 13px;
+            }
+
+            .suggestion {
+                font-size: 11px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <header class="header">
+        <div class="brand">
+            <div class="logo">✦</div>
+            <div>
+                <h1>MediSync AI</h1>
+                <div class="status">● Demo assistant online</div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button class="header-btn" id="clearBtn" type="button">
+                Clear chat
+            </button>
+            <a class="header-btn" href="{% url 'dashboard' %}">
+                Dashboard
+            </a>
+        </div>
+    </header>
+
+    <section class="intro">
+        <strong>Welcome to your health information assistant</strong>
+        <p>
+            Ask about general health education, hydration, sleep, or safe
+            medicine practices. This demo uses predefined responses and does
+            not diagnose conditions or replace a healthcare professional.
+        </p>
+    </section>
+
+    <section class="suggestions">
+        <div class="suggestions-title">TRY ASKING</div>
+
+        <div class="suggestion-list">
+            <button class="suggestion" type="button"
+                    data-question="How can I stay hydrated?">
+                💧 Staying hydrated
+            </button>
+
+            <button class="suggestion" type="button"
+                    data-question="How can I improve my sleep routine?">
+                🌙 Healthy sleep
+            </button>
+
+            <button class="suggestion" type="button"
+                    data-question="What should I know about taking medicines safely?">
+                💊 Medicine safety
+            </button>
+
+            <button class="suggestion" type="button"
+                    data-question="What should I do if I have symptoms?">
+                🩺 General symptoms
+            </button>
+        </div>
+    </section>
+
+    <main class="messages" id="messages" aria-live="polite">
+        <div class="message assistant">
+            <div class="avatar">✦</div>
+            <div class="message-content">
+                <div class="sender">MediSync AI</div>
+                <div class="bubble">
+                    Hello! 👋 Welcome to MediSync AI.
+
+                    I'm a demo assistant for general health education. Choose
+                    one of the suggested questions or type a message below.
+                </div>
+                <div class="timestamp">Just now</div>
+            </div>
+        </div>
+    </main>
+
+    <div class="typing" id="typing" aria-live="polite">
+        MediSync AI is thinking
+        <span class="dots"><span>.</span><span>.</span><span>.</span></span>
+    </div>
+
+    <form class="composer" id="chatForm">
+        {% csrf_token %}
+
+        <div class="input-row">
+            <input
+                type="text"
+                id="messageInput"
+                name="message"
+                placeholder="Type your message here..."
+                maxlength="2000"
+                autocomplete="off"
+                aria-label="Type your message"
+                required
+            >
+
+            <button type="submit" id="sendBtn">Send ➤</button>
+        </div>
+
+        <div class="footer-note">
+            Demo only · For personal medical concerns, consult a qualified
+            healthcare professional.
+        </div>
+    </form>
+
+</div>
+
+<script>
+    const chatForm = document.getElementById("chatForm");
+    const messageInput = document.getElementById("messageInput");
+    const messages = document.getElementById("messages");
+    const typing = document.getElementById("typing");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const responseUrl = "{% url 'chatbot_response' %}";
+    const initialMessage = messages.innerHTML;
+
+    function getCookie(name) {
+        const cookie = document.cookie
+            .split("; ")
+            .find(row => row.startsWith(name + "="));
+
+        return cookie ? decodeURIComponent(cookie.split("=")[1]) : "";
+    }
+
+    function getTime() {
+        return new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+        });
+    }
+
+    function addMessage(sender, text) {
+        const isUser = sender === "user";
+
+        const message = document.createElement("div");
+        message.className = isUser ? "message user" : "message assistant";
+
+        const avatar = document.createElement("div");
+        avatar.className = "avatar";
+        avatar.textContent = isUser ? "You" : "✦";
+
+        const content = document.createElement("div");
+        content.className = "message-content";
+
+        const senderLabel = document.createElement("div");
+        senderLabel.className = "sender";
+        senderLabel.textContent = isUser ? "You" : "MediSync AI";
+
+        const bubble = document.createElement("div");
+        bubble.className = "bubble";
+
+        // textContent keeps messages as text rather than executable HTML.
+        bubble.textContent = text;
+
+        const timestamp = document.createElement("div");
+        timestamp.className = "timestamp";
+        timestamp.textContent = getTime();
+
+        content.append(senderLabel, bubble, timestamp);
+        message.append(avatar, content);
+        messages.appendChild(message);
+
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    async function sendMessage(text) {
+        const cleanText = text.trim();
+
+        if (!cleanText || sendBtn.disabled) {
+            return;
+        }
+
+        addMessage("user", cleanText);
+        messageInput.value = "";
+        sendBtn.disabled = true;
+        typing.classList.add("visible");
+
+        try {
+            const formData = new FormData();
+            formData.append("message", cleanText);
+
+            const csrfToken =
+                document.querySelector("[name=csrfmiddlewaretoken]").value
+                || getCookie("csrftoken");
+
+            const response = await fetch(responseUrl, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrfToken
+                },
+                body: formData,
+                credentials: "same-origin"
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error || "Unable to process your message."
+                );
+            }
+
+            // Short delay so the thinking indicator is visible.
+            await new Promise(resolve => setTimeout(resolve, 500));
+            addMessage(
+                "assistant",
+                data.answer || "Sorry, no response was returned."
+            );
+
+        } catch (error) {
+            addMessage(
+                "assistant",
+                "Sorry, I couldn't send your message. Please try again. " +
+                error.message
+            );
+        } finally {
+            typing.classList.remove("visible");
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+    }
+
+    chatForm.addEventListener("submit", function(event) {
+        event.preventDefault();
+        sendMessage(messageInput.value);
+    });
+
+    document.querySelectorAll(".suggestion").forEach(button => {
+        button.addEventListener("click", function() {
+            sendMessage(button.dataset.question);
+        });
+    });
+
+    clearBtn.addEventListener("click", function() {
+        messages.innerHTML = initialMessage;
+        typing.classList.remove("visible");
+        messageInput.focus();
+    });
+</script>
+
+</body>
+</html>
+

@@ -8,4 +8,6 @@ urlpatterns = [
     path("medicines/", include("medicines.urls")),
     path("appointments/", include("appointments.urls")),
     path("records/", include("records.urls")),
+
+    path("ai-assistant/", include("ai_assistant.urls")),
 ]

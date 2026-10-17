@@ -1,0 +1,108 @@
+﻿:root {
+    --primary: #0f766e;
+    --primary-dark: #115e59;
+    --background: #f4f7fb;
+    --surface: #ffffff;
+    --text: #172033;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 16px;
+    --shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: "Segoe UI", Arial, sans-serif;
+    line-height: 1.6;
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-dark);
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+button, .btn, input[type="submit"] {
+    cursor: pointer;
+}
+
+button:disabled, input[type="submit"]:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+input, select, textarea {
+    max-width: 100%;
+}
+
+input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible {
+    outline: 3px solid rgba(15, 118, 110, 0.25);
+    outline-offset: 2px;
+}
+
+.card, .stat-card, .panel, .form-container, .content-card {
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+@media (max-width: 768px) {
+    body {
+        font-size: 15px;
+    }
+
+    .layout {
+        display: block !important;
+    }
+
+    .sidebar {
+        width: 100% !important;
+        position: static !important;
+    }
+
+    .main, main {
+        max-width: 100%;
+        padding: 16px !important;
+    }
+
+    .cards, .stats, .summary {
+        grid-template-columns: 1fr !important;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+}

@@ -1,5 +1,15 @@
 from django.contrib import admin
-from .models import Profile
+from .models import Profile, DoctorPatient
+
+
+@admin.register(DoctorPatient)
+class DoctorPatientAdmin(admin.ModelAdmin):
+    list_display = ("doctor", "patient", "created_at")
+    list_filter = ("created_at",)
+    search_fields = (
+        "doctor__username",
+        "patient__username",
+    )
 
 
 @admin.register(Profile)
