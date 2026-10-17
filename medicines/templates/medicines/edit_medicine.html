@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Medicine - MediSync</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+        }
+
+        .navbar {
+            background: #2563eb;
+            color: white;
+            padding: 18px 40px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 40px auto;
+        }
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 11px;
+            margin-top: 6px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        button,
+        .back-btn {
+            display: inline-block;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .back-btn {
+            background: #64748b;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h1>MediSync</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="form-card">
+
+            <h2>Edit Medicine</h2>
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                <label>Medicine Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    value="{{ medicine.name }}"
+                    required
+                >
+
+                <label>Dosage</label>
+                <input
+                    type="text"
+                    name="dosage"
+                    value="{{ medicine.dosage }}"
+                    required
+                >
+
+                <label>Instructions</label>
+                <textarea
+                    name="instructions"
+                    placeholder="Enter instructions"
+                >{{ medicine.instructions }}</textarea>
+
+                <label>Start Date</label>
+                <input
+                    type="date"
+                    name="start_date"
+                    value="{{ medicine.start_date|date:'Y-m-d' }}"
+                    required
+                >
+
+                <label>End Date</label>
+                <input
+                    type="date"
+                    name="end_date"
+                    value="{{ medicine.end_date|date:'Y-m-d' }}"
+                    required
+                >
+
+                <label>Reminder Time</label>
+                <input
+                    type="time"
+                    name="reminder_time"
+                    value="{{ medicine.reminder_time|time:'H:i' }}"
+                    required
+                >
+
+                <button type="submit">
+                    Save Changes
+                </button>
+
+                <a
+                    class="back-btn"
+                    href="{% url 'medicine_list' %}"
+                >
+                    Back
+                </a>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

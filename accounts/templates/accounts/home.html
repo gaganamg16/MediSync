@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MediSync - Health Management</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .navbar {
+            background: #2563eb;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 9px 15px;
+            border-radius: 6px;
+        }
+
+        .nav-links a:hover {
+            background: #1d4ed8;
+        }
+
+        .hero {
+            width: 90%;
+            max-width: 1100px;
+            margin: 70px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+            color: #1e3a8a;
+        }
+
+        .hero h1 span {
+            color: #2563eb;
+        }
+
+        .hero p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #64748b;
+        }
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 7px;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .secondary {
+            background: white;
+            color: #2563eb;
+            border: 1px solid #2563eb;
+        }
+
+        .hero-card {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .hero-card h2 {
+            color: #2563eb;
+        }
+
+        .feature {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .feature:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            font-size: 25px;
+        }
+
+        .features {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto 70px;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+        }
+
+        .feature-box h3 {
+            color: #2563eb;
+        }
+
+        .footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        @media (max-width: 800px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+                margin-top: 40px;
+            }
+
+            .hero h1 {
+                font-size: 38px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 18px 20px;
+            }
+
+            .nav-links {
+                gap: 5px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="navbar">
+
+        <div class="logo">
+            MediSync
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+            <a href="{% url 'register' %}">
+                Register
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <section class="hero">
+
+        <div>
+
+            <h1>
+                Manage Your Health
+                <span>Simply.</span>
+            </h1>
+
+            <p>
+                MediSync helps you organize medicines,
+                appointments, and medical records
+                in one convenient place.
+            </p>
+
+            <div class="buttons">
+
+                <a
+                    class="btn primary"
+                    href="{% url 'register' %}"
+                >
+                    Get Started
+                </a>
+
+                <a
+                    class="btn secondary"
+                    href="{% url 'login' %}"
+                >
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="hero-card">
+
+            <h2>
+                Your Health Dashboard
+            </h2>
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    💊
+                </div>
+
+                <div>
+                    <strong>Medicines</strong>
+                    <br>
+                    Organize your medicine information
+                    and reminder times.
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    📅
+                </div>
+
+                <div>
+                    <strong>Appointments</strong>
+                    <br>
+                    Keep your appointment information
+                    organized.
+                </div>
+
+            </div>
+
+
+            <div class="feature">
+
+                <div class="feature-icon">
+                    📋
+                </div>
+
+                <div>
+                    <strong>Medical Records</strong>
+                    <br>
+                    Keep important health records
+                    together.
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="features">
+
+        <h2>
+            Everything in One Place
+        </h2>
+
+        <div class="feature-grid">
+
+            <div class="feature-box">
+
+                <h3>
+                    Medicine Management
+                </h3>
+
+                <p>
+                    Add, update and organize your
+                    medicine information and reminder
+                    schedules.
+                </p>
+
+            </div>
+
+
+            <div class="feature-box">
+
+                <h3>
+                    Appointment Tracking
+                </h3>
+
+                <p>
+                    Keep doctor, hospital, date,
+                    time and notes organized.
+                </p>
+
+            </div>
+
+
+            <div class="feature-box">
+
+                <h3>
+                    Medical Records
+                </h3>
+
+                <p>
+                    Store and manage your personal
+                    medical record information.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <div class="footer">
+
+        <p>
+            © 2026 MediSync. Built for organized health management.
+        </p>
+
+    </div>
+
+</body>
+
+</html>

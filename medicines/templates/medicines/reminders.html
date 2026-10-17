@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicine Reminders | MediSync</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 16px;
+            font-family: Arial, sans-serif;
+            background: #f3f7fb;
+            color: #243247;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #087f8c, #14b8a6);
+            color: white;
+            padding: 28px;
+            border-radius: 18px;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            margin: 0 0 10px;
+        }
+
+        .header p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .summary {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 12px #00000008;
+        }
+
+        .medicine-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            margin-bottom: 16px;
+            box-shadow: 0 3px 12px #0000000a;
+            border-left: 5px solid #14b8a6;
+        }
+
+        .medicine-card h2 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .details {
+            line-height: 1.9;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #e0f2fe;
+            color: #075985;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .due {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .completed {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .passed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            padding: 12px 18px;
+            background: #087f8c;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .secondary {
+            background: #e2e8f0;
+            color: #243247;
+        }
+
+        .empty {
+            background: white;
+            padding: 35px 20px;
+            text-align: center;
+            border-radius: 14px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 16px 10px;
+            }
+
+            .header {
+                padding: 22px 18px;
+            }
+
+            .medicine-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header class="header">
+        <h1>⏰ Medicine Reminders</h1>
+        <p>Welcome to MediSync. Review your medicine schedule and reminder times.</p>
+    </header>
+
+    <section class="summary">
+        <strong>Today's date:</strong> {{ current_date|date:"d M Y" }}<br>
+        <strong>Current time:</strong> {{ current_time|time:"h:i A" }}
+    </section>
+
+ ```html
+    {% for item in reminders %}
+        <article class="medicine-card">
+            <h2>{{ item.medicine.name }}</h2>
+
+            <p><strong>Dosage:</strong> {{ item.medicine.dosage }}</p>
+            <p><strong>Reminder time:</strong> {{ item.medicine.reminder_time|time:"h:i A" }}</p>
+            <p><strong>Status:</strong> {{ item.status }}</p>
+        </article>
+    {% empty %}
+        <section class="empty">
+            <h2>No medicines added yet</h2>
+            <p>Add a medicine to see its reminder schedule here.</p>
+        </section>
+    {% endfor %}
+
+    <nav class="buttons">
+        <a class="button" href="{% url 'add_medicine' %}">+ Add Medicine</a>
+        <a class="button secondary" href="{% url 'medicine_list' %}">Back to Medicines</a>
+    </nav>
+
+</div>
+</body>
+</html>
+

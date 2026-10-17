@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medical Records - MediSync</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .navbar {
+            background: #2563eb;
+            color: white;
+            padding: 18px 40px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back-btn {
+            background: #64748b;
+        }
+
+        .record-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .record-card h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        .actions {
+            margin-top: 18px;
+        }
+
+        .delete {
+            background: #dc2626;
+            margin-left: 8px;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .navbar {
+                padding: 18px 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h1>MediSync</h1>
+    </div>
+
+    <div class="container">
+
+      ```
+   <div class="header">
+    <h2>Medical Records</h2>
+
+```
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+    <a class="btn" href="{% url 'add_record' %}">
+        Add Medical Record
+    </a>
+
+    <a class="btn" href="{% url 'download_records_pdf' %}">
+        Download PDF
+    </a>
+</div>
+```
+
+</div>
+
+
+    <!-- Search Medical Records -->
+    <form method="GET" style="margin-bottom: 25px; display: flex; gap: 10px; flex-wrap: wrap;">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search medical records..."
+            value="{{ search_query }}"
+            style="padding: 12px; flex: 1; min-width: 200px; border: 1px solid #cbd5e1; border-radius: 6px;"
+        >
+
+        <button
+            type="submit"
+            class="btn"
+            style="border: none; cursor: pointer;"
+        >
+            Search
+        </button>
+
+        <a class="btn back-btn" href="{% url 'record_list' %}">
+            Clear
+        </a>
+
+    </form>
+
+    {% if records %}
+```
+
+
+            {% for record in records %}
+
+                <div class="record-card">
+
+                    <h3>{{ record.title }}</h3>
+
+                    <p>
+                        <strong>Date:</strong>
+                        {{ record.record_date }}
+                    </p>
+
+                    {% if record.description %}
+                        <p>
+                            <strong>Description:</strong>
+                            {{ record.description }}
+                        </p>
+                    {% endif %}
+
+                    <div class="actions">
+
+                        <a
+                            class="btn"
+                            href="{% url 'edit_record' record.id %}"
+                        >
+                            Edit
+                        </a>
+
+                        <a
+                            class="btn delete"
+                            href="{% url 'delete_record' record.id %}"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+                <p>No medical records added yet.</p>
+
+                <a class="btn" href="{% url 'add_record' %}">
+                    Add Your First Record
+                </a>
+            </div>
+
+        {% endif %}
+
+        <br>
+
+        <a class="btn back-btn" href="{% url 'dashboard' %}">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>

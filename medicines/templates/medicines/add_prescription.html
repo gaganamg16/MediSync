@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Prescription | MediSync</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h1 { color: #2563eb; }
+
+        button {
+            background: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        a { color: #2563eb; }
+        .errorlist { color: red; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Add Prescription</h1>
+        <p>Select a registered patient and enter the prescription details.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save Prescription</button>
+        </form>
+
+        <p>
+            <a href="{% url 'prescription_list' %}">
+                View Prescriptions
+            </a>
+        </p>
+
+        <p>
+            <a href="{% url 'doctor_dashboard' %}">
+                Back to Doctor Dashboard
+            </a>
+        </p>
+    </div>
+</body>
+</html>

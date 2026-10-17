@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescriptions | MediSync</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        h1 { color: #2563eb; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th { background: #eff6ff; }
+        a { color: #2563eb; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Prescriptions</h1>
+
+        {% if request.user.profile.role == "DOCTOR" %}
+            <p><a href="{% url 'add_prescription' %}">+ Add Prescription</a></p>
+        {% endif %}
+
+        {% if prescriptions %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Medicine</th>
+                        <th>Dosage</th>
+                        <th>Frequency</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for prescription in prescriptions %}
+                        <tr>
+                            <td>{{ prescription.patient.username }}</td>
+                            <td>{{ prescription.doctor.username }}</td>
+                            <td>{{ prescription.medicine_name }}</td>
+                            <td>{{ prescription.dosage }}</td>
+                            <td>{{ prescription.frequency }}</td>
+                            <td>{{ prescription.start_date }}</td>
+                            <td>{{ prescription.end_date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No prescriptions found.</p>
+        {% endif %}
+
+        <p><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+    </div>
+</body>
+</html>

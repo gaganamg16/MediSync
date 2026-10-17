@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | MediSync</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f6fb;
+            color: #243247;
+        }
+
+        .navbar {
+            background: #ffffff;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            color: #167d9a;
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #526174;
+            margin-left: 22px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .navbar a:hover {
+            color: #167d9a;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 29px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #718096;
+            line-height: 1.6;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(25, 65, 90, 0.08);
+        }
+
+        .profile-banner {
+            background: linear-gradient(135deg, #167d9a, #22b8a7);
+            height: 140px;
+        }
+
+        .profile-info {
+            padding: 0 35px 35px;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #e0f5f3;
+            border: 5px solid white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #167d9a;
+            font-size: 38px;
+            font-weight: bold;
+            margin-top: -50px;
+            margin-bottom: 15px;
+        }
+
+        .username {
+            font-size: 24px;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .email-text {
+            color: #718096;
+            overflow-wrap: anywhere;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 15px;
+            background: #e3f8ec;
+            color: #16834a;
+            padding: 7px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            font-size: 19px;
+            margin: 30px 0 18px;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .detail-box {
+            padding: 18px;
+            background: #f7fafc;
+            border: 1px solid #e7edf3;
+            border-radius: 12px;
+            min-width: 0;
+        }
+
+        .detail-box label {
+            display: block;
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .detail-box p {
+            font-size: 15px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 9px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d6e0e9;
+            border-radius: 9px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #167d9a;
+            box-shadow: 0 0 0 3px rgba(22, 125, 154, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            border: none;
+            border-radius: 9px;
+            background: #167d9a;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background: #10657d;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 22px;
+            color: #167d9a;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 25px 15px;
+            color: #8592a3;
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 16px 5%;
+                align-items: flex-start;
+                gap: 14px;
+                flex-direction: column;
+            }
+
+            .navbar a {
+                margin-left: 0;
+                margin-right: 15px;
+            }
+
+            .container {
+                margin-top: 30px;
+            }
+
+            .profile-info {
+                padding: 0 20px 25px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">MediSync</div>
+
+        <div>
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'medicine_list' %}">Medicines</a>
+            <a href="{% url 'appointment_list' %}">Appointments</a>
+            <a href="{% url 'record_list' %}">Records</a>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <div class="page-title">
+            <h1>My Profile</h1>
+            <p>Manage your account information and personal details.</p>
+        </div>
+
+        <section class="profile-card">
+
+            <div class="profile-banner"></div>
+
+            <div class="profile-info">
+
+                <div class="avatar">
+                    {{ request.user.username|first|upper }}
+                </div>
+
+                <h2 class="username">{{ request.user.username }}</h2>
+
+                <p class="email-text">
+                    {{ request.user.email|default:"No email address added" }}
+                </p>
+
+                <span class="status">● Active Account</span>
+
+                <h3 class="section-title">Account Information</h3>
+
+                <div class="details-grid">
+
+                    <div class="detail-box">
+                        <label>Username</label>
+                        <p>{{ request.user.username }}</p>
+                    </div>
+
+                    <div class="detail-box">
+                        <label>Email Address</label>
+                        <p>{{ request.user.email|default:"Not provided" }}</p>
+                    </div>
+
+                    <div class="detail-box">
+                        <label>Account Status</label>
+                        <p>Active</p>
+                    </div>
+
+                    <div class="detail-box">
+                        <label>User ID</label>
+                        <p>#{{ request.user.id }}</p>
+                    </div>
+
+                </div>
+
+                <h3 class="section-title">Update Email Address</h3>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            value="{{ request.user.email }}"
+                            placeholder="Enter your email address"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn">
+                        Save Changes
+                    </button>
+                </form>
+
+                <a href="{% url 'dashboard' %}" class="back-link">
+                    ← Back to Dashboard
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        © 2026 MediSync. Your health, organized.
+    </footer>
+
+</body>
+</html>
+

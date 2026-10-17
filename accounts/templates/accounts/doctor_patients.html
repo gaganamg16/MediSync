@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patients | MediSync</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .header, .patient {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .patient {
+            border-left: 4px solid #2563eb;
+        }
+
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .muted {
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Patient Management</h1>
+            <p>Welcome, Dr. {{ request.user.username }}.</p>
+            <a href="{% url 'doctor_dashboard' %}">← Back to Doctor Dashboard</a>
+        </div>
+
+        {% for patient in patients %}
+            <div class="patient">
+                <h3>{{ patient.username }}</h3>
+                <p class="muted">
+                    Email: {{ patient.email|default:"Not provided" }}
+                </p>
+            </div>
+        {% empty %}
+            <div class="patient">
+                <p>No patient accounts found.</p>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

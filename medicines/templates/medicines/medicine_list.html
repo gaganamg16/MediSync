@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Medicines - MediSync</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .navbar {
+            background: #2563eb;
+            color: white;
+            padding: 18px 40px;
+        }
+
+        .navbar h1 {
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 35px auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back-btn {
+            background: #64748b;
+        }
+
+        .medicine-card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .medicine-card h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        .actions {
+            margin-top: 18px;
+        }
+
+        .delete {
+            background: #dc2626;
+            margin-left: 8px;
+        }
+
+        .empty {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .navbar {
+                padding: 18px 20px;
+            }
+
+            .container {
+                width: 94%;
+            }
+        }
+     .alert-message {
+    padding: 14px 18px;
+    margin: 15px 0;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.alert-message.success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+.alert-message.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}   
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <h1>MediSync</h1>
+    </div>
+
+    <div class="container">
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert-message {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+        <div class="header">
+            <h2>My Medicines</h2>
+
+            <a class="btn" href="{% url 'add_medicine' %}">
+                Add Medicine
+            </a>
+        </div>
+
+        {% if medicines %}
+
+            {% for medicine in medicines %}
+
+                <div class="medicine-card">
+
+                    <h3>{{ medicine.name }}</h3>
+
+                    <p>
+                        <strong>Dosage:</strong>
+                        {{ medicine.dosage }}
+                    </p>
+
+                    {% if medicine.instructions %}
+                        <p>
+                            <strong>Instructions:</strong>
+                            {{ medicine.instructions }}
+                        </p>
+                    {% endif %}
+
+                    <p>
+                        <strong>Start Date:</strong>
+                        {{ medicine.start_date }}
+                    </p>
+
+                    <p>
+                        <strong>End Date:</strong>
+                        {{ medicine.end_date }}
+                    </p>
+
+                    <p>
+                        <strong>Reminder:</strong>
+                        {{ medicine.reminder_time }}
+                    </p>
+
+                    <div class="actions">
+
+                        <a
+                            class="btn"
+                            href="{% url 'edit_medicine' medicine.id %}"
+                        >
+                            Edit
+                        </a>
+
+                        <a
+                            class="btn delete"
+                            href="{% url 'delete_medicine' medicine.id %}"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty">
+
+                <p>No medicines added yet.</p>
+
+                <a class="btn" href="{% url 'add_medicine' %}">
+                    Add Your First Medicine
+                </a>
+
+            </div>
+
+        {% endif %}
+
+        <br>
+
+        <a class="btn back-btn" href="{% url 'dashboard' %}">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>
