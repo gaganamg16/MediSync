@@ -28,7 +28,7 @@ def medicine_list(request):
         elif (
             current_time.hour == medicine.reminder_time.hour
             and current_time.minute == medicine.reminder_time.minute
-        ):
+    ):
             medicine.reminder_status = "Due now"
         elif current_time > medicine.reminder_time:
             medicine.reminder_status = "Time passed"

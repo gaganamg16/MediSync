@@ -10,4 +10,4 @@ urlpatterns = [
     path("records/", include("records.urls")),
 
     path("ai-assistant/", include("ai_assistant.urls")),
-]
+ ]
