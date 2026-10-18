@@ -62,6 +62,8 @@ def register(request):
 
 @login_required
 def dashboard(request):
+    from datetime import date
+
     today = date.today()
 
     # ------------------------------------------
@@ -79,13 +81,16 @@ def dashboard(request):
         else:
             medicine.status = "Active"
 
-    # Data used by JavaScript for medicine reminders.
     reminder_medicines = [
         {
             "id": medicine.id,
             "name": medicine.name,
             "dosage": medicine.dosage,
-            "reminder_time": medicine.reminder_time.strftime("%H:%M"),
+            "reminder_time": (
+                medicine.reminder_time.strftime("%H:%M")
+                if medicine.reminder_time
+                else ""
+            ),
             "start_date": medicine.start_date.isoformat(),
             "end_date": medicine.end_date.isoformat(),
         }
@@ -110,26 +115,43 @@ def dashboard(request):
         else:
             appointment.status = "Upcoming"
 
-    upcoming_appointments = appointments.filter(
+    appointment_count = appointments.count()
+
+    upcoming_appointment_count = appointments.filter(
         appointment_date__gte=today
     ).count()
-        # ------------------------------------------
-    # MONTHLY APPOINTMENT ANALYTICS
-    # ------------------------------------------
-    from datetime import timedelta
-    from dateutil.relativedelta import relativedelta
 
-    current_month = today.replace(day=1)
-    six_months_ago = current_month - relativedelta(months=5)
+    # ------------------------------------------
+    # MONTHLY APPOINTMENT ANALYTICS
+    # Last six months, including the current month
+    # ------------------------------------------
+    monthly_start = today.replace(day=1)
+
+    for _ in range(5):
+        previous_month = monthly_start.month - 1
+        previous_year = monthly_start.year
+
+        if previous_month == 0:
+            previous_month = 12
+            previous_year -= 1
+
+        monthly_start = monthly_start.replace(
+            year=previous_year,
+            month=previous_month
+        )
 
     monthly_appointments = (
         appointments.filter(
-            appointment_date__gte=six_months_ago,
-            appointment_date__lte=today,
+            appointment_date__gte=monthly_start,
+            appointment_date__lte=today
         )
-        .annotate(month=TruncMonth("appointment_date"))
+        .annotate(
+            month=TruncMonth("appointment_date")
+        )
         .values("month")
-        .annotate(total=Count("id"))
+        .annotate(
+            total=Count("id")
+        )
         .order_by("month")
     )
 
@@ -141,34 +163,137 @@ def dashboard(request):
     monthly_labels = []
     monthly_counts = []
 
-    for offset in range(6):
-        month_date = (
-            six_months_ago.replace(day=1)
+    month_cursor = monthly_start
+
+    for _ in range(6):
+        month_key = month_cursor.strftime("%Y-%m")
+
+        monthly_labels.append(
+            month_cursor.strftime("%b %Y")
         )
 
-        # Move forward by the required number of months.
-        month_number = month_date.month + offset
-        year = month_date.year + (month_number - 1) // 12
-        month = (month_number - 1) % 12 + 1
-        month_date = month_date.replace(year=year, month=month)
+        monthly_counts.append(
+            monthly_appointment_data.get(month_key, 0)
+        )
 
-        month_key = month_date.strftime("%Y-%m")
+        # Move to the next month.
+        if month_cursor.month == 12:
+            month_cursor = month_cursor.replace(
+                year=month_cursor.year + 1,
+                month=1
+            )
+        else:
+            month_cursor = month_cursor.replace(
+                month=month_cursor.month + 1
+            )
 
-        monthly_labels.append(month_date.strftime("%b %Y"))
-        monthly_counts.append(monthly_appointment_data.get(month_key, 0))
+    # ------------------------------------------
+    # APPOINTMENT STATUS ANALYTICS
+    # ------------------------------------------
+    completed_appointments = appointments.filter(
+        appointment_date__lt=today
+    ).count()
 
-    # Data used by JavaScript for appointment reminders.
+    today_appointments = appointments.filter(
+        appointment_date=today
+    ).count()
+
+    future_appointments = appointments.filter(
+        appointment_date__gt=today
+    ).count()
+
+    appointment_status_labels = [
+        "Completed",
+        "Today",
+        "Upcoming",
+    ]
+
+    appointment_status_counts = [
+        completed_appointments,
+        today_appointments,
+        future_appointments,
+    ]
+
+    # ------------------------------------------
+    # UPCOMING APPOINTMENT REMINDERS
+    # ------------------------------------------
+    upcoming_appointments = appointments.filter(
+        appointment_date__gte=today
+    )
+
     appointment_reminders = [
         {
             "id": appointment.id,
             "doctor_name": appointment.doctor_name,
             "hospital_name": appointment.hospital_name,
-            "appointment_date": appointment.appointment_date.isoformat(),
-            "appointment_time": appointment.appointment_time.strftime("%H:%M"),
+            "appointment_date": (
+                appointment.appointment_date.isoformat()
+            ),
+            "appointment_time": (
+                appointment.appointment_time.strftime("%H:%M")
+                if appointment.appointment_time
+                else ""
+            ),
         }
-        for appointment in appointments
-        if appointment.appointment_date >= today
+        for appointment in upcoming_appointments
     ]
+
+        # ------------------------------------------
+    # SMART NOTIFICATIONS
+    # ------------------------------------------
+    from datetime import timedelta
+
+    notifications = []
+
+    # Medicine schedule notifications
+    for medicine in medicines:
+        if medicine.start_date <= today <= medicine.end_date:
+            if medicine.reminder_time:
+                notifications.append({
+                    "type": "medicine",
+                    "title": "Medicine Reminder",
+                    "message": (
+                        f"Your medicine {medicine.name} "
+                        f"is scheduled at "
+                        f"{medicine.reminder_time.strftime('%I:%M %p')}."
+                    ),
+                    "date": today,
+                    "icon": "💊",
+                })
+
+    # Appointment notifications
+    for appointment in appointments:
+        days_until = (
+            appointment.appointment_date - today
+        ).days
+
+        if days_until == 0:
+            notifications.append({
+                "type": "appointment",
+                "title": "Appointment Today",
+                "message": (
+                    f"You have an appointment with "
+                    f"{appointment.doctor_name} today."
+                ),
+                "date": appointment.appointment_date,
+                "icon": "📅",
+            })
+
+        elif 0 < days_until <= 3:
+            notifications.append({
+                "type": "appointment",
+                "title": "Upcoming Appointment",
+                "message": (
+                    f"Your appointment with "
+                    f"{appointment.doctor_name} is in "
+                    f"{days_until} day(s)."
+                ),
+                "date": appointment.appointment_date,
+                "icon": "🗓️",
+            })
+
+    # Sort notifications by date
+    notifications.sort(key=lambda item: item["date"])
 
     # ------------------------------------------
     # MEDICAL RECORDS
@@ -187,24 +312,38 @@ def dashboard(request):
     ).order_by("-created_at")
 
     # ------------------------------------------
-    # DASHBOARD
+    # DASHBOARD CONTEXT
     # ------------------------------------------
     context = {
+        "today": today,
+
+        # Medicines
         "medicines": medicines,
         "medicine_count": medicines.count(),
         "reminder_medicines": reminder_medicines,
 
+        # Appointments
         "appointments": appointments,
-        "appointment_count": appointments.count(),
-        "upcoming_appointment_count": upcoming_appointments,
+        "appointment_count": appointment_count,
+        "upcoming_appointment_count": upcoming_appointment_count,
         "appointment_reminders": appointment_reminders,
 
-                "monthly_appointment_labels": monthly_labels,
+        "notifications": notifications,
+        "notification_count": len(notifications),
+
+        # Monthly appointment chart
+        "monthly_appointment_labels": monthly_labels,
         "monthly_appointment_counts": monthly_counts,
 
+        # Appointment status chart
+        "appointment_status_labels": appointment_status_labels,
+        "appointment_status_counts": appointment_status_counts,
+
+        # Medical records
         "records": records,
         "record_count": records.count(),
 
+        # Prescriptions
         "prescriptions": prescriptions,
         "prescription_count": prescriptions.count(),
     }
