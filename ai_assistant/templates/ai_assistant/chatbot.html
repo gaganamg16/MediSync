@@ -1,4 +1,4 @@
-
+```html
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -19,27 +19,135 @@
             color: #1e293b;
         }
 
-        .app {
-            max-width: 1000px;
-            height: 92vh;
-            min-height: 550px;
-            margin: 4vh auto;
+        .layout {
+            display: flex;
+            max-width: 1450px;
+            height: 94vh;
+            min-height: 560px;
+            margin: 3vh auto;
             background: white;
-            border-radius: 20px;
+            border-radius: 18px;
+            overflow: hidden;
             box-shadow: 0 10px 40px rgba(15, 23, 42, 0.10);
+        }
+
+        .sidebar {
+            width: 270px;
+            flex-shrink: 0;
+            background: #134e4a;
+            color: white;
             display: flex;
             flex-direction: column;
+            padding: 20px 14px;
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 5px 8px 20px;
+        }
+
+        .new-chat {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #5eead4;
+            border-radius: 10px;
+            background: #0f766e;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .new-chat:hover {
+            background: #115e59;
+        }
+
+        .history-heading {
+            margin: 25px 8px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #99f6e4;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 7px;
+            border-radius: 9px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .history-item.active {
+            background: rgba(255, 255, 255, 0.20);
+        }
+
+        .history-link {
+            flex: 1;
+            min-width: 0;
+            padding: 12px 9px;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            overflow-wrap: anywhere;
+        }
+
+        .history-link:hover {
+            color: #99f6e4;
+        }
+
+        .delete-chat {
+            border: none;
+            background: transparent;
+            color: #ccfbf1;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+        }
+
+        .delete-chat:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .empty-history {
+            padding: 8px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #ccfbf1;
+        }
+
+        .sidebar-footer {
+            padding: 15px 8px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 12px;
+            color: #ccfbf1;
+        }
+
+        .chat-panel {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 0;
             overflow: hidden;
         }
 
         .header {
             background: #0f766e;
             color: white;
-            padding: 20px 25px;
+            padding: 18px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
 
         .brand {
@@ -49,18 +157,18 @@
         }
 
         .logo {
-            width: 45px;
-            height: 45px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.18);
+            width: 43px;
+            height: 43px;
+            border-radius: 13px;
+            background: rgba(255, 255, 255, 0.18);
             display: grid;
             place-items: center;
-            font-size: 25px;
+            font-size: 24px;
         }
 
         .brand h1 {
             margin: 0;
-            font-size: 21px;
+            font-size: 20px;
         }
 
         .status {
@@ -69,70 +177,66 @@
             color: #ccfbf1;
         }
 
-        .header-actions {
-            display: flex;
-            gap: 10px;
-        }
-
         .header-btn {
-            border: 1px solid rgba(255,255,255,0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             background: transparent;
             color: white;
             padding: 9px 12px;
             border-radius: 9px;
             text-decoration: none;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 12px;
+            white-space: nowrap;
         }
 
         .header-btn:hover {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .intro {
-            padding: 18px 24px;
+            padding: 14px 22px;
             background: #f0fdfa;
             border-bottom: 1px solid #dbeafe;
         }
 
         .intro strong {
             color: #115e59;
+            font-size: 14px;
         }
 
         .intro p {
             margin: 5px 0 0;
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.6;
             color: #475569;
         }
 
         .suggestions {
-            padding: 15px 24px;
+            padding: 12px 22px;
             border-bottom: 1px solid #e2e8f0;
         }
 
         .suggestions-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #64748b;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .suggestion-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 7px;
         }
 
         .suggestion {
             background: white;
             border: 1px solid #99f6e4;
             color: #0f766e;
-            padding: 9px 12px;
+            padding: 8px 10px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 12px;
-            transition: 0.2s;
+            font-size: 11px;
         }
 
         .suggestion:hover {
@@ -142,18 +246,18 @@
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 24px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
+            gap: 16px;
             scroll-behavior: smooth;
         }
 
         .message {
             display: flex;
             gap: 10px;
-            max-width: 85%;
-            animation: appear 0.25s ease;
+            max-width: 90%;
+            animation: appear 0.2s ease;
         }
 
         .message.user {
@@ -163,13 +267,14 @@
 
         .avatar {
             flex-shrink: 0;
-            width: 34px;
-            height: 34px;
+            width: 33px;
+            height: 33px;
             display: grid;
             place-items: center;
-            border-radius: 12px;
+            border-radius: 11px;
             background: #ccfbf1;
             color: #115e59;
+            font-size: 11px;
             font-weight: 700;
         }
 
@@ -197,11 +302,11 @@
         }
 
         .bubble {
-            padding: 13px 16px;
-            border-radius: 5px 16px 16px 16px;
+            padding: 12px 15px;
+            border-radius: 5px 15px 15px 15px;
             background: #f1f5f9;
             color: #334155;
-            font-size: 14px;
+            font-size: 13px;
             line-height: 1.7;
             overflow-wrap: anywhere;
             white-space: pre-wrap;
@@ -210,7 +315,7 @@
         .user .bubble {
             background: #0f766e;
             color: white;
-            border-radius: 16px 5px 16px 16px;
+            border-radius: 15px 5px 15px 15px;
         }
 
         .timestamp {
@@ -220,7 +325,7 @@
 
         .typing {
             display: none;
-            padding: 0 24px 12px;
+            padding: 0 22px 10px;
             color: #64748b;
             font-size: 12px;
         }
@@ -229,59 +334,42 @@
             display: block;
         }
 
-        .dots span {
-            animation: blink 1.2s infinite;
-            font-size: 20px;
-        }
-
-        .dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
         .composer {
             border-top: 1px solid #e2e8f0;
-            padding: 17px 22px;
+            padding: 14px 20px;
             background: white;
         }
 
         .input-row {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         #messageInput {
             flex: 1;
             min-width: 0;
-            padding: 15px 17px;
+            padding: 13px 15px;
             border: 1px solid #cbd5e1;
-            border-radius: 13px;
+            border-radius: 12px;
             outline: none;
             font: inherit;
-            font-size: 14px;
+            font-size: 13px;
         }
 
         #messageInput:focus {
             border-color: #0f766e;
-            box-shadow: 0 0 0 3px rgba(15,118,110,0.10);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.10);
         }
 
         #sendBtn {
             border: none;
-            border-radius: 12px;
-            padding: 14px 21px;
+            border-radius: 11px;
+            padding: 13px 18px;
             background: #0f766e;
             color: white;
             font-weight: 700;
             cursor: pointer;
-        }
-
-        #sendBtn:hover {
-            background: #115e59;
         }
 
         #sendBtn:disabled {
@@ -291,15 +379,21 @@
 
         .footer-note {
             text-align: center;
-            margin-top: 10px;
+            margin-top: 9px;
             color: #94a3b8;
-            font-size: 11px;
+            font-size: 10px;
+        }
+
+        .welcome {
+            color: #334155;
+            line-height: 1.8;
+            font-size: 13px;
         }
 
         @keyframes appear {
             from {
                 opacity: 0;
-                transform: translateY(7px);
+                transform: translateY(5px);
             }
             to {
                 opacity: 1;
@@ -307,55 +401,101 @@
             }
         }
 
-        @keyframes blink {
-            0%, 60%, 100% { opacity: 0.25; }
-            30% { opacity: 1; }
-        }
-
-        @media (max-width: 650px) {
-            .app {
+        @media (max-width: 750px) {
+            .layout {
                 height: 100vh;
                 min-height: 0;
                 margin: 0;
                 border-radius: 0;
             }
 
+            .sidebar {
+                width: 180px;
+                padding: 12px 8px;
+            }
+
+            .sidebar-title {
+                font-size: 16px;
+                padding: 5px 4px 15px;
+            }
+
+            .history-link {
+                font-size: 11px;
+                padding: 10px 5px;
+            }
+
             .header {
-                padding: 15px;
+                padding: 12px;
             }
 
             .brand h1 {
-                font-size: 17px;
+                font-size: 16px;
             }
 
-            .header-btn {
-                padding: 8px;
-                font-size: 11px;
+            .logo {
+                width: 34px;
+                height: 34px;
             }
 
             .intro,
             .suggestions {
-                padding: 13px 16px;
+                padding: 10px 12px;
             }
 
             .messages {
-                padding: 17px 13px;
-            }
-
-            .message {
-                max-width: 95%;
+                padding: 13px 10px;
             }
 
             .composer {
-                padding: 12px;
+                padding: 10px;
             }
 
-            #sendBtn {
-                padding: 13px;
+            .header-btn {
+                padding: 7px;
+                font-size: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar {
+                width: 125px;
+                padding: 8px 5px;
+            }
+
+            .sidebar-title {
+                font-size: 13px;
+            }
+
+            .new-chat {
+                padding: 9px 5px;
+                font-size: 11px;
+            }
+
+            .history-heading {
+                font-size: 9px;
+                margin: 18px 4px 8px;
+            }
+
+            .history-link {
+                font-size: 10px;
+            }
+
+            .delete-chat {
+                padding: 4px;
+                font-size: 10px;
+            }
+
+            .status {
+                font-size: 10px;
             }
 
             .suggestion {
-                font-size: 11px;
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+
+            .message {
+                max-width: 98%;
             }
         }
 
@@ -369,107 +509,171 @@
 </head>
 
 <body>
-<div class="app">
+<div class="layout">
 
-    <header class="header">
-        <div class="brand">
-            <div class="logo">✦</div>
-            <div>
-                <h1>MediSync AI</h1>
-                <div class="status">● Demo assistant online</div>
-            </div>
+    <aside class="sidebar">
+        <div class="sidebar-title">✦ MediSync AI</div>
+
+        <button class="new-chat" id="newChatBtn" type="button">
+            + New Chat
+        </button>
+
+        <div class="history-heading">Chat History</div>
+
+        <div class="history-list">
+            {% for chat in conversations %}
+                <div class="history-item {% if current_conversation and current_conversation.id == chat.id %}active{% endif %}">
+                    <a class="history-link"
+                       href="{% url 'chatbot_page' %}?conversation={{ chat.id }}">
+                        💬 {{ chat.title|truncatechars:30 }}
+                    </a>
+
+                    <form method="post"
+                          action="{% url 'delete_conversation' chat.id %}"
+                          onsubmit="return confirm('Delete this conversation and its messages?');">
+                        {% csrf_token %}
+                        <button class="delete-chat"
+                                type="submit"
+                                aria-label="Delete conversation">
+                            🗑
+                        </button>
+                    </form>
+                </div>
+            {% empty %}
+                <div class="empty-history">
+                    Your conversations will appear here after you send your first message.
+                </div>
+            {% endfor %}
         </div>
 
-        <div class="header-actions">
-            <button class="header-btn" id="clearBtn" type="button">
-                Clear chat
-            </button>
+        <div class="sidebar-footer">
+            Your health matters 💚
+        </div>
+    </aside>
+
+    <section class="chat-panel">
+
+        <header class="header">
+            <div class="brand">
+                <div class="logo">✦</div>
+                <div>
+                    <h1>MediSync AI</h1>
+                    <div class="status">● AI Assistant</div>
+                </div>
+            </div>
+
             <a class="header-btn" href="{% url 'dashboard' %}">
                 Dashboard
             </a>
-        </div>
-    </header>
+        </header>
 
-    <section class="intro">
-        <strong>Welcome to your health information assistant</strong>
-        <p>
-            Ask about general health education, hydration, sleep, or safe
-            medicine practices. This demo uses predefined responses and does
-            not diagnose conditions or replace a healthcare professional.
-        </p>
-    </section>
+        <section class="intro">
+            <strong>Your Personal Health Information Assistant</strong>
+            <p>
+                Ask questions about general health, hydration, sleep,
+                healthy habits, and medicine safety. This assistant does
+                not diagnose conditions or replace a healthcare professional.
+            </p>
+        </section>
 
-    <section class="suggestions">
-        <div class="suggestions-title">TRY ASKING</div>
+        {% if not current_conversation %}
+        <section class="suggestions">
+            <div class="suggestions-title">TRY ASKING</div>
 
-        <div class="suggestion-list">
-            <button class="suggestion" type="button"
-                    data-question="How can I stay hydrated?">
-                💧 Staying hydrated
-            </button>
+            <div class="suggestion-list">
+                <button class="suggestion" type="button"
+                        data-question="How can I stay hydrated?">
+                    💧 Staying hydrated
+                </button>
 
-            <button class="suggestion" type="button"
-                    data-question="How can I improve my sleep routine?">
-                🌙 Healthy sleep
-            </button>
+                <button class="suggestion" type="button"
+                        data-question="How can I improve my sleep routine?">
+                    🌙 Healthy sleep
+                </button>
 
-            <button class="suggestion" type="button"
-                    data-question="What should I know about taking medicines safely?">
-                💊 Medicine safety
-            </button>
+                <button class="suggestion" type="button"
+                        data-question="What should I know about taking medicines safely?">
+                    💊 Medicine safety
+                </button>
 
-            <button class="suggestion" type="button"
-                    data-question="What should I do if I have symptoms?">
-                🩺 General symptoms
-            </button>
-        </div>
-    </section>
-
-    <main class="messages" id="messages" aria-live="polite">
-        <div class="message assistant">
-            <div class="avatar">✦</div>
-            <div class="message-content">
-                <div class="sender">MediSync AI</div>
-                <div class="bubble">
-                    Hello! 👋 Welcome to MediSync AI.
-
-                    I'm a demo assistant for general health education. Choose
-                    one of the suggested questions or type a message below.
-                </div>
-                <div class="timestamp">Just now</div>
+                <button class="suggestion" type="button"
+                        data-question="What should I do if I have symptoms?">
+                    🩺 General symptoms
+                </button>
             </div>
+        </section>
+        {% endif %}
+
+        <main class="messages" id="messages" aria-live="polite">
+
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="message {% if msg.role == 'user' %}user{% else %}assistant{% endif %}">
+                        <div class="avatar">
+                            {% if msg.role == 'user' %}You{% else %}✦{% endif %}
+                        </div>
+
+                        <div class="message-content">
+                            <div class="sender">
+                                {% if msg.role == 'user' %}You{% else %}MediSync AI{% endif %}
+                            </div>
+
+                            <div class="bubble">{{ msg.content }}</div>
+
+                            <div class="timestamp">
+                                {{ msg.created_at|date:"M d, Y H:i" }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="message assistant">
+                    <div class="avatar">✦</div>
+                    <div class="message-content">
+                        <div class="sender">MediSync AI</div>
+                        <div class="bubble welcome">👋 Hello! I'm MediSync AI, your personal health information assistant.
+
+Ask me about healthy eating, sleep, exercise, wellness, and general health information.
+
+💙 I provide general health information, not medical diagnoses or prescriptions. For personal medical concerns, please consult a qualified healthcare professional.</div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </main>
+
+        <div class="typing" id="typing" aria-live="polite">
+            MediSync AI is thinking...
         </div>
-    </main>
 
-    <div class="typing" id="typing" aria-live="polite">
-        MediSync AI is thinking
-        <span class="dots"><span>.</span><span>.</span><span>.</span></span>
-    </div>
+        <form class="composer" id="chatForm">
+            {% csrf_token %}
 
-    <form class="composer" id="chatForm">
-        {% csrf_token %}
+            <input type="hidden"
+                   id="conversationId"
+                   value="{% if current_conversation %}{{ current_conversation.id }}{% endif %}">
 
-        <div class="input-row">
-            <input
-                type="text"
-                id="messageInput"
-                name="message"
-                placeholder="Type your message here..."
-                maxlength="2000"
-                autocomplete="off"
-                aria-label="Type your message"
-                required
-            >
+            <div class="input-row">
+                <input
+                    type="text"
+                    id="messageInput"
+                    name="message"
+                    placeholder="Type your message here..."
+                    maxlength="2000"
+                    autocomplete="off"
+                    aria-label="Type your message"
+                    required
+                >
 
-            <button type="submit" id="sendBtn">Send ➤</button>
-        </div>
+                <button type="submit" id="sendBtn">Send ➤</button>
+            </div>
 
-        <div class="footer-note">
-            Demo only · For personal medical concerns, consult a qualified
-            healthcare professional.
-        </div>
-    </form>
+            <div class="footer-note">
+                AI-generated health information · Consult a healthcare professional for personal medical concerns.
+            </div>
+        </form>
 
+    </section>
 </div>
 
 <script>
@@ -478,18 +682,9 @@
     const messages = document.getElementById("messages");
     const typing = document.getElementById("typing");
     const sendBtn = document.getElementById("sendBtn");
-    const clearBtn = document.getElementById("clearBtn");
+    const conversationIdInput = document.getElementById("conversationId");
 
     const responseUrl = "{% url 'chatbot_response' %}";
-    const initialMessage = messages.innerHTML;
-
-    function getCookie(name) {
-        const cookie = document.cookie
-            .split("; ")
-            .find(row => row.startsWith(name + "="));
-
-        return cookie ? decodeURIComponent(cookie.split("=")[1]) : "";
-    }
 
     function getTime() {
         return new Date().toLocaleTimeString([], {
@@ -517,8 +712,6 @@
 
         const bubble = document.createElement("div");
         bubble.className = "bubble";
-
-        // textContent keeps messages as text rather than executable HTML.
         bubble.textContent = text;
 
         const timestamp = document.createElement("div");
@@ -548,9 +741,14 @@
             const formData = new FormData();
             formData.append("message", cleanText);
 
+            const conversationId = conversationIdInput.value;
+
+            if (conversationId) {
+                formData.append("conversation_id", conversationId);
+            }
+
             const csrfToken =
-                document.querySelector("[name=csrfmiddlewaretoken]").value
-                || getCookie("csrftoken");
+                document.querySelector("[name=csrfmiddlewaretoken]").value;
 
             const response = await fetch(responseUrl, {
                 method: "POST",
@@ -569,12 +767,22 @@
                 );
             }
 
-            // Short delay so the thinking indicator is visible.
-            await new Promise(resolve => setTimeout(resolve, 500));
+            if (data.conversation_id) {
+                conversationIdInput.value = data.conversation_id;
+            }
+
             addMessage(
                 "assistant",
                 data.answer || "Sorry, no response was returned."
             );
+
+            // Refresh the sidebar so the new conversation appears.
+            if (!conversationId) {
+                window.location.href =
+                    "{% url 'chatbot_page' %}?conversation=" +
+                    encodeURIComponent(data.conversation_id);
+                return;
+            }
 
         } catch (error) {
             addMessage(
@@ -600,11 +808,11 @@
         });
     });
 
-    clearBtn.addEventListener("click", function() {
-        messages.innerHTML = initialMessage;
-        typing.classList.remove("visible");
-        messageInput.focus();
+    document.getElementById("newChatBtn").addEventListener("click", function() {
+        window.location.href = "{% url 'chatbot_page' %}";
     });
+
+    messages.scrollTop = messages.scrollHeight;
 </script>
 
 </body>

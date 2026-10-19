@@ -776,14 +776,142 @@
             flex-direction: column;
         }
     }
+    /* Smart Notifications */
+.notification-dot {
+    display: none;
+}
+
+.notification-dot.active {
+    display: block;
+}
+
+.notification-wrapper {
+    position: relative;
+}
+
+.notification-count {
+    position: absolute;
+    top: -7px;
+    right: -7px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.notification-panel {
+    display: none;
+    position: absolute;
+    top: 55px;
+    right: 0;
+    width: 350px;
+    max-width: calc(100vw - 35px);
+    max-height: 420px;
+    overflow-y: auto;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.15);
+    z-index: 300;
+}
+
+.notification-panel.open {
+    display: block;
+}
+
+.notification-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.notification-panel-header h3 {
+    font-size: 15px;
+}
+
+.notification-panel-header span {
+    color: var(--primary-dark);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background: #f8fafc;
+}
+
+.notification-icon {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0fe7cd;
+    border-radius: 12px;
+    font-size: 19px;
+}
+
+.notification-item h4 {
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.notification-item p {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.notification-empty {
+    padding: 28px 18px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.notification-date {
+    display: block;
+    margin-top: 6px;
+    color: var(--primary-dark);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+@media (max-width: 560px) {
+    .notification-panel {
+        right: -55px;
+    }
+}
 </style>
-```
+
 
 </head>
 
 <body>
 
-```
+
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
 
@@ -871,17 +999,88 @@
 
         <div class="topbar-actions">
 
-            <button class="icon-button" id="notificationButton"
-                    type="button" aria-label="Notifications">
-                ♧
-                <span class="notification-dot"></span>
-            </button>
+    <!-- Smart Notifications -->
+    <div class="notification-wrapper">
 
-            <a href="{% url 'add_medicine' %}" class="primary-button">
-                <span>＋</span> Add Medicine
-            </a>
+        <button
+            class="icon-button"
+            id="notificationButton"
+            type="button"
+            aria-label="Notifications"
+            aria-expanded="false"
+            aria-controls="notificationPanel"
+        >
+            🔔
+
+            {% if notification_count %}
+                <span class="notification-count">
+                    {{ notification_count }}
+                </span>
+
+                <span class="notification-dot active"></span>
+            {% endif %}
+        </button>
+
+        <div
+            class="notification-panel"
+            id="notificationPanel"
+            aria-label="Smart Notifications"
+        >
+            <div class="notification-panel-header">
+                <h3>Notifications</h3>
+                <span>{{ notification_count|default:0 }} alerts</span>
+            </div>
+
+            {% if notifications %}
+
+                {% for notification in notifications %}
+
+                    <div class="notification-item">
+
+                        <div class="notification-icon">
+                            {{ notification.icon }}
+                        </div>
+
+                        <div>
+                            <h4>{{ notification.title }}</h4>
+
+                            <p>{{ notification.message }}</p>
+
+                            <span class="notification-date">
+                                {{ notification.date|date:"d M Y" }}
+                            </span>
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="notification-empty">
+                    <div style="font-size: 30px; margin-bottom: 10px;">
+                        ✓
+                    </div>
+
+                    <strong>You're all caught up!</strong>
+
+                    <p>
+                        Appointment alerts and medicine schedule
+                        notifications will appear here.
+                    </p>
+                </div>
+
+            {% endif %}
 
         </div>
+
+    </div>
+
+    <a href="{% url 'add_medicine' %}" class="primary-button">
+        <span>＋</span> Add Medicine
+    </a>
+
+</div>
 
     </header>
 
@@ -1228,34 +1427,53 @@
             });
         }
 
-        // Notification toast
-        const notificationButton =
-            document.getElementById("notificationButton");
+        // Smart Notifications Panel
 
-        const toast = document.getElementById("toast");
-        let toastTimer;
+const notificationButton =
+    document.getElementById("notificationButton");
 
-        function showToast(message) {
-            if (!toast) return;
+const notificationPanel =
+    document.getElementById("notificationPanel");
 
-            toast.textContent = message;
-            toast.classList.add("show");
+if (notificationButton && notificationPanel) {
 
-            clearTimeout(toastTimer);
+    notificationButton.addEventListener("click", function (event) {
+        event.stopPropagation();
 
-            toastTimer = setTimeout(function () {
-                toast.classList.remove("show");
-            }, 3000);
+        const isOpen =
+            notificationPanel.classList.toggle("open");
+
+        notificationButton.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+        );
+    });
+
+    notificationPanel.addEventListener("click", function (event) {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("click", function () {
+        notificationPanel.classList.remove("open");
+
+        notificationButton.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+    });
+
+    document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+            notificationPanel.classList.remove("open");
+
+            notificationButton.setAttribute(
+                "aria-expanded",
+                "false"
+            );
         }
-
-        if (notificationButton) {
-            notificationButton.addEventListener("click", function () {
-                showToast(
-                    "You are viewing your MediSync dashboard. " +
-                    "Check your appointments and medicine schedule regularly."
-                );
-            });
-        }
+    });
+}
+    
 
         // Safely read Django JSON data
         function readJSON(elementId, fallback) {

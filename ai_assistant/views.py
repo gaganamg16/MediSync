@@ -1,184 +1,175 @@
+
+import logging
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
+from google import genai
+
+from .models import ChatConversation, ChatMessage
+
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def chatbot_page(request):
-    return render(request, "ai_assistant/chatbot.html")
-
-
-def get_health_response(message):
-    """
-    Return predefined health FAQ responses.
-    This is a demo FAQ system, not a live AI model.
-    """
-    text = message.lower().strip()
-
-    # Greetings
-    if any(word in text for word in ["hello", "hi", "hey"]):
-        return (
-            "Hello! Welcome to MediSync Health FAQ. "
-            "You can ask me about hydration, sleep, medicine safety, "
-            "appointments, and general health education."
-        )
-
-    # Hydration
-    if any(word in text for word in [
-        "water", "hydration", "hydrated", "drink water"
-    ]):
-        return (
-            "HEALTH FAQ — HYDRATION\n\n"
-            "Drinking water regularly throughout the day can help maintain "
-            "hydration. Your needs vary with activity, weather, and health "
-            "conditions. Follow any fluid restrictions advised by your "
-            "healthcare professional."
-        )
-
-    # Sleep
-    if any(word in text for word in [
-        "sleep", "sleeping", "insomnia", "rest", "bedtime"
-    ]):
-        return (
-            "HEALTH FAQ — SLEEP\n\n"
-            "A regular sleep schedule, a comfortable sleep environment, "
-            "and a relaxing bedtime routine may support healthy sleep. "
-            "If sleep difficulties continue, consult a healthcare professional."
-        )
-
-    # Medicine safety
-    if any(word in text for word in [
-        "medicine", "medication", "tablet", "drug", "dose", "dosage"
-    ]):
-        return (
-            "HEALTH FAQ — MEDICINE SAFETY\n\n"
-            "Take medicines only as directed by a qualified healthcare "
-            "professional or according to the official instructions. "
-            "Do not change a prescribed dose or combine medicines without "
-            "checking with a healthcare professional or pharmacist."
-        )
-
-    # Appointments
-    if any(word in text for word in [
-        "appointment", "doctor visit", "hospital visit"
-    ]):
-        return (
-            "HEALTH FAQ — APPOINTMENTS\n\n"
-            "Before a medical appointment, consider noting your questions, "
-            "current medicines, allergies, and relevant symptoms. Bring "
-            "any medical information your healthcare professional requests. "
-            "You can manage your appointments through the MediSync dashboard."
-        )
-
-    # Healthy habits
-    if any(word in text for word in [
-        "exercise", "physical activity", "fitness", "healthy habits"
-    ]):
-        return (
-            "HEALTH FAQ — HEALTHY HABITS\n\n"
-            "Regular physical activity suited to your abilities, balanced "
-            "meals, sufficient sleep, and hydration can support general "
-            "well-being. Start at a comfortable level and seek professional "
-            "advice if you have health concerns."
-        )
-
-    # Nutrition
-    if any(word in text for word in [
-        "food", "nutrition", "diet", "fruits", "vegetables"
-    ]):
-        return (
-            "HEALTH FAQ — NUTRITION\n\n"
-            "A varied eating pattern that includes fruits, vegetables, "
-            "grains, protein sources, and other foods appropriate to your "
-            "needs can support general health. Individual nutritional needs "
-            "vary, so consult a qualified professional for personalized advice."
-        )
-
-    # Fever and symptoms
-    if any(word in text for word in [
-        "fever", "pain", "symptom", "sick", "illness"
-    ]):
-        return (
-            "HEALTH FAQ — SYMPTOMS\n\n"
-            "Symptoms can have many causes, and this FAQ cannot diagnose "
-            "them. Contact a qualified healthcare professional for advice "
-            "about your symptoms. Seek urgent medical care for severe or "
-            "rapidly worsening symptoms."
-        )
-
-    # Stress and relaxation
-    if any(word in text for word in [
-        "stress", "relax", "anxiety", "tension"
-    ]):
-        return (
-            "HEALTH FAQ — STRESS MANAGEMENT\n\n"
-            "Taking breaks, maintaining a regular routine, talking to "
-            "someone you trust, and trying calm breathing exercises may "
-            "help with everyday stress. If distress persists or affects "
-            "daily life, consider speaking with a qualified professional."
-        )
-
-    # Medical records
-    if any(word in text for word in [
-        "medical record", "health record", "health history", "report"
-    ]):
-        return (
-            "HEALTH FAQ — MEDICAL RECORDS\n\n"
-            "Keeping medical records organized can help you and your "
-            "healthcare professional review relevant health information. "
-            "MediSync provides a Medical Records section where you can "
-            "manage records in your application."
-        )
-
-    # Emergencies
-    if any(word in text for word in [
-        "emergency", "urgent", "can't breathe", "cannot breathe"
-    ]):
-        return (
-            "URGENT HEALTH NOTICE\n\n"
-            "If you or someone else may be experiencing a medical emergency, "
-            "contact your local emergency service or go to the nearest "
-            "emergency department immediately. Do not wait for a chatbot "
-            "response."
-        )
-
-    # Default response
-    return (
-        "I couldn't find a matching topic in the MediSync Health FAQ yet.\n\n"
-        "Try asking about:\n"
-        "• Hydration and drinking water\n"
-        "• Sleep and rest\n"
-        "• Medicine safety\n"
-        "• Doctor appointments\n"
-        "• Nutrition and healthy habits\n"
-        "• Stress management\n"
-        "• Symptoms and medical records\n\n"
-        "This is a predefined FAQ system, not a live AI model."
+    conversations = ChatConversation.objects.filter(
+        user=request.user
     )
+
+    conversation_id = request.GET.get("conversation")
+    current_conversation = None
+    messages = []
+
+    if conversation_id:
+        current_conversation = get_object_or_404(
+            ChatConversation,
+            id=conversation_id,
+            user=request.user,
+        )
+
+        messages = current_conversation.messages.all()
+
+    return render(
+        request,
+        "ai_assistant/chatbot.html",
+        {
+            "conversations": conversations,
+            "current_conversation": current_conversation,
+            "messages": messages,
+        },
+    )
+
+
+
+def get_gemini_response(message):
+    """Generate a general health-information response using Gemini."""
+
+    api_key = os.getenv("GEMINI_API_KEY")
+
+    if not api_key:
+        raise RuntimeError("The Gemini API key is not configured.")
+
+    client = genai.Client(api_key=api_key)
+
+    prompt = f"""
+You are MediSync AI, a health information assistant.
+
+Follow these rules:
+
+1. Provide general health education in simple, clear language.
+2. Do not diagnose diseases or prescribe medicines.
+3. Never recommend changing a prescribed medicine dose.
+4. Encourage users to consult qualified healthcare professionals
+   for personal medical concerns.
+5. For potentially serious symptoms, advise prompt medical assessment.
+6. For possible medical emergencies, advise contacting local emergency
+   services immediately. In India, the emergency number is 112.
+7. Do not claim to access medical records or patient information.
+8. If uncertain, say so instead of inventing medical facts.
+9. Keep answers concise, supportive, and easy to understand.
+
+User's message:
+{message}
+"""
+
+    response = client.models.generate_content(
+        model="gemini-3.5-flash",
+        contents=prompt,
+    )
+
+    answer = response.text
+
+    if not answer:
+        raise RuntimeError("Gemini returned an empty response.")
+
+    return answer
 
 
 @login_required
 @require_POST
 def chatbot_response(request):
     message = request.POST.get("message", "").strip()
+    conversation_id = request.POST.get("conversation_id", "").strip()
 
     if not message:
         return JsonResponse(
             {"error": "Please enter a message."},
-            status=400
+            status=400,
         )
 
     if len(message) > 2000:
         return JsonResponse(
             {"error": "Please keep your message under 2000 characters."},
-            status=400
+            status=400,
         )
 
-    answer = get_health_response(message)
+    # Find the user's existing conversation or create a new one.
+    if conversation_id:
+        conversation = get_object_or_404(
+            ChatConversation,
+            id=conversation_id,
+            user=request.user,
+        )
+    else:
+        conversation = ChatConversation.objects.create(
+            user=request.user,
+            title=message[:60],
+        )
 
-    return JsonResponse({
-        "answer": answer,
-        "mode": "faq"
-    })
+    # Save the user's message before requesting an AI response.
+    ChatMessage.objects.create(
+        conversation=conversation,
+        role="user",
+        content=message,
+    )
 
+    try:
+        answer = get_gemini_response(message)
+
+        # Save Gemini's response.
+        ChatMessage.objects.create(
+            conversation=conversation,
+            role="assistant",
+            content=answer,
+        )
+
+        conversation.save()
+
+        return JsonResponse(
+            {
+                "answer": answer,
+                "mode": "gemini",
+                "conversation_id": conversation.id,
+            }
+        )
+
+    except Exception:
+        logger.exception("MediSync Gemini request failed.")
+
+        return JsonResponse(
+            {
+                "error": (
+                    "The AI assistant is temporarily unavailable. "
+                    "Your message has been saved. Please try again."
+                ),
+                "conversation_id": conversation.id,
+            },
+            status=503,
+        )
+
+@login_required
+@require_POST
+def delete_conversation(request, conversation_id):
+    conversation = get_object_or_404(
+        ChatConversation,
+        id=conversation_id,
+        user=request.user,
+    )
+
+    conversation.delete()
+
+    return redirect("chatbot_page")
