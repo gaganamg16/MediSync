@@ -2,7 +2,7 @@
 
 MediSync is a web-based healthcare management application built with Django. It helps users organize their health-related information, manage appointments, track medicines, and access AI-powered health information through an integrated chatbot.
 
-## ✨ Features
+### ✨ Features
 
 * 🔐 **User Authentication** — Register, log in, and securely access your account.
 * 📊 **Dashboard** — View a summary of medicines, appointments, and medical records.
@@ -14,7 +14,7 @@ MediSync is a web-based healthcare management application built with Django. It 
 * 🗑️ **Conversation Management** — Delete individual chatbot conversations.
 * 👤 **User Profile** — View account information.
 
-## 🛠️ Technologies Used
+### 🛠️ Technologies Used
 
 | Technology        | Purpose                               |
 | ----------------- | ------------------------------------- |
@@ -27,7 +27,7 @@ MediSync is a web-based healthcare management application built with Django. It 
 | Google Gemini API | AI-powered health-information chatbot |
 | Git and GitHub    | Version control and project hosting   |
 
-## 📂 Project Structure
+### 📂 Project Structure
 
 ```text
 MediSync/
