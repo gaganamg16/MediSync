@@ -3,7 +3,7 @@
 <p align="center">
   <strong>A modern healthcare management web application built with Django.</strong>
   <br>
-  Manage medicines, appointments, and medical records through one organized platform.
+  Manage medicines, appointments, and medical records through one organized platform..
 </p>
 
 <p align="center">
