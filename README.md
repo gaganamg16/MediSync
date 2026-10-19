@@ -1,4 +1,4 @@
-# 🏥 MediSync — Smart Healthcare Management System
+#🏥 MediSync — Smart Healthcare Management System
 
 <p align="center">
   <strong>A modern healthcare management web application built with Django.</strong>
@@ -243,13 +243,13 @@ Potential improvements include:
 * 📄 Medical record export and download.
 * 🔐 Additional security and privacy improvements.
 * 📱 Enhanced mobile experience.
-* 🧪 Automated testing and improved test coverage.
+* 🧪 Automated testing and improved test coverage..
 
 ## 👩‍💻 Developer
 
 **Gagana M G**
 
-Computer Science and Engineering Student
+Computer Science and Engineering Student.
 
 GitHub: [@gaganamg16](https://github.com/gaganamg16)
 
