@@ -1,4 +1,4 @@
-#🏥 MediSync — Smart Healthcare Management System
+🏥 MediSync — Smart Healthcare Management System
 
 <p align="center">
   <strong>A modern healthcare management web application built with Django.</strong>
